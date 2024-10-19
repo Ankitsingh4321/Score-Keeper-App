@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Score Keeper App</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f7;
+            margin: 0;
+            padding: 0;
+        }
+
+        #root {
+            text-align: center;
+            margin: 50px auto;
+            padding: 20px;
+            max-width: 600px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            color: #34495e;
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            background-color: #3498db;
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        button:active {
+            background-color: #1f618d;
+        }
+
+        button:focus {
+            outline: none;
+        }
+
+        span {
+            font-size: 22px;
+            color: #2c3e50;
+        }
+
+        strong {
+            font-size: 22px;
+            color: #e74c3c;
+        }
+
+        .result {
+            margin-top: 20px;
+            font-size: 24px;
+            color: #16a085;
+        }
+
+        .ball-res {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin: 5px;
+            font-weight: bold;
+        }
+
+        br {
+            line-height: 1.5;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        let score = 0;
+        let wicket = 0;
+        let ballWiseRes = [];
+
+        function addScore(num) {
+            if (wicket < 10) {
+                ballWiseRes.push(num);
+                score += num;
+                rooElement.render(<App />);
+            }
+        }
+
+        function addWicket() {
+            if (wicket < 10) {
+                ballWiseRes.push(<strong>W</strong>);
+                wicket += 1;
+                rooElement.render(<App />);
+            }
+        }
+
+        function deleteLastBall() {
+            if (ballWiseRes.length > 0) {
+                const lastBall = ballWiseRes.pop();
+                if (typeof lastBall === 'number') {
+                    score -= lastBall;
+                } else {
+                    wicket -= 1; 
+                }
+                rooElement.render(<App />);
+            }
+        }
+
+       
+        function reset() {
+            score = 0;
+            wicket = 0;
+            ballWiseRes = [];
+            rooElement.render(<App />);
+        }
+
+        const ScoreButtons = () => (
+            <div>
+                <button onClick={() => addScore(0)}>0</button>
+                <button onClick={() => addScore(1)}>1</button>
+                <button onClick={() => addScore(2)}>2</button>
+                <button onClick={() => addScore(3)}>3</button>
+                <button onClick={() => addScore(4)}>4</button>
+                <button onClick={() => addScore(5)}>5</button>
+                <button onClick={() => addScore(6)}>6</button>
+                <button onClick={addWicket}>W</button>
+                <button onClick={deleteLastBall}>Delete Last</button>
+                <button onClick={reset}>Reset</button> 
+            </div>
+        );
+
+        const Result = () => (
+            <div className="result">
+                {ballWiseRes.map((res, index) => (
+                    <React.Fragment key={index}>
+                        {index % 6 === 0 && index !== 0 ? <br /> : null}
+                        <span className="ball-res">
+                            {res === 0 ? <strong>.</strong> : res}
+                        </span>
+                    </React.Fragment>
+                ))}
+            </div>
+        );
+
+        function App() {
+            return (
+                <>
+                    <h1>SCORE KEEPER</h1>
+                    <h2>
+                        SCORE: {score}/{wicket}
+                    </h2>
+                    <ScoreButtons />
+                    <Result />
+                </>
+            );
+        }
+
+        const rooElement = ReactDOM.createRoot(document.getElementById("root"));
+        rooElement.render(<App />);
+    </script>
+</body>
+
+</html>
